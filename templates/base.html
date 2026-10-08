@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}SABER{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    {% if current_user.is_authenticated %}
+    <nav class="nav">
+        {% if current_user.is_admin %}
+        <a href="{{ url_for('admin_painel') }}">Início</a>
+
+        {# Essas rotas ainda não existem. Assim, isso serve para ignorá-los, senão dá erro
+        <a href="{{ url_for('admin_usuarios') }}">Usuários</a>
+        <a href="{{ url_for('admin_livros') }}">Livros</a>
+        <a href="{{ url_for('admin_emprestimos') }}">Empréstimos</a>
+        #}
+
+        {% else %}
+        <a href="{{ url_for('catalogo') }}">Início</a>
+        {% endif %}
+        <a href="{{ url_for('sair') }}">Sair</a>
+    </nav>
+    {% endif %}
+
+    {% block cabecalho %}{% endblock %}
+
+    {% block mensagens %}
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% if mensagens %}
+    <div class="mensagens">
+        {% for categoria, texto in mensagens %}
+        <div class="message {{ categoria }}">{{ texto }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% endblock %}
+
+    {% block conteudo %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+    <script>
+        function alternarSenha(idInput, botao) {
+            const input = document.getElementById(idInput);
+            const olhoAberto = botao.querySelector(".icone-olho-aberto");
+            const olhoFechado = botao.querySelector(".icone-olho-fechado");
+            const mostrandoSenha = input.type === "text";
+
+            input.type = mostrandoSenha ? "password" : "text";
+
+            olhoAberto.toggleAttribute("hidden", !mostrandoSenha);
+            olhoFechado.toggleAttribute("hidden", mostrandoSenha);
+
+            botao.setAttribute(
+                "aria-label",
+                mostrandoSenha ? "Mostrar senha" : "Ocultar senha"
+            );
+        }
+    </script>
+</body>
+
+</html>

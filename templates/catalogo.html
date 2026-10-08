@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block titulo %}Catálogo do SABER{% endblock %}
+
+{% block cabecalho %}
+<header class="header">
+    <h1>SABER</h1>
+</header>
+{% endblock %}
+{% block conteudo %}
+<main class="container">
+    <div class="card">
+        <h2>Olá, {{ current_user.nome }}</h2>
+        <p>{{ current_user.email }}</p>
+        <br>
+        <p>O catálogo de livros estará disponível em breve.</p>
+    </div>
+</main>
+{% endblock %}

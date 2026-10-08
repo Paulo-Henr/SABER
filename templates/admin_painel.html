@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block titulo %}Início - SABER{% endblock %}
+
+{% block cabecalho %}
+<header class="header">
+    <h1>SABER</h1>
+</header>
+{% endblock %}
+
+{% block conteudo %}
+<main class="container">
+
+    <div class="topbar">
+        <div>
+            <h2>Dashboard</h2>
+            <p>Visão geral do sistema</p>
+        </div>
+    </div>
+
+    <section class="grid">
+
+        <div class="stat">
+            <span>Total de usuários</span>
+            <strong>{{ total_usuarios }}</strong>
+        </div>
+
+        <div class="stat">
+            <span>Total de livros</span>
+            <strong>{{ total_livros }}</strong>
+        </div>
+
+        <div class="stat">
+            <span>Total de empréstimos ativos</span>
+            <strong>{{ total_emprestimos }}</strong>
+        </div>
+
+    </section>
+
+</main>
+{% endblock %}

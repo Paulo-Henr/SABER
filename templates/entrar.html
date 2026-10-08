@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block titulo %}Login - SABER{% endblock %}
+
+{% block mensagens %}{% endblock %}
+{% block conteudo %}
+<main class="login">
+    <div class="login-box">
+        <h1>SABER</h1>
+
+        <p>Seja bem-vindo de volta!</p>
+
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, texto in mensagens %}
+        <div class="message {{ categoria }}">{{ texto }}</div>
+        {% endfor %}
+        {% endwith %}
+
+        <form method="post">
+            <input type="hidden" name="next" value="{{ proxima }}">
+            <div class="field">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" value="{{ email }}" placeholder="Digite seu e-mail"
+                    required>
+            </div>
+            <div class="field">
+                <label for="senha">Senha</label>
+                <div class="campo-senha">
+                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                    <button type="button" class="botao-olho" onclick="alternarSenha('senha', this)" aria-label="Mostrar senha" title="Mostrar/ocultar senha">
+                        <svg class="icone-olho-aberto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <svg class="icone-olho-fechado" hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn primary">
+                Entrar
+            </button>
+        </form>
+    </div>
+</main>
+{% endblock %}
