@@ -166,4 +166,29 @@ def listar_generos():
 def buscar_livro(livro_id):
     return db.session.get(Livro, livro_id)
 
+def buscar_livro_por_isbn(isbn):
+    return Livro.query.filter_by(isbn=isbn).first()
+
+def criar_livro(titulo, autor, isbn, imagem, id_genero, id_administrador):
+    livro = Livro(
+        titulo=titulo,
+        autor=autor,
+        isbn=isbn,
+        imagem=imagem,
+        id_genero=id_genero,
+        id_administrador_cadastro=id_administrador,
+    )
+    db.session.add(livro)
+    db.session.commit()
+    return livro.id
+
+def atualizar_livro(livro_id, titulo, autor, isbn, imagem, id_genero):
+    livro = db.session.get(Livro, livro_id)
+    livro.titulo = titulo
+    livro.autor = autor
+    livro.isbn = isbn
+    livro.imagem = imagem
+    livro.id_genero = id_genero
+    db.session.commit()
+
 # Continuem com as outras funções abaixo

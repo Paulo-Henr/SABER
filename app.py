@@ -94,6 +94,114 @@ def admin_painel():
 def catalogo():
     return render_template("catalogo.html")
 
+def validar_livro(form, livro_id=None)
+    titulo = request.form.get("titulo", "").strip()
+    autor = request.form.get("autor", "").strip()
+    isbn = request.form.get("isbn", "").strip().replace("-", "").replace(" ", "")
+    imagem = request.form.get("imagem", "").strip()
+    
+    generos_por_id = {str(g.id): g for g in models.listar_generos()}
+    genero = generos_por_id.get(request.form.get("id_genero", ""))
+    
+    erros = []
+    
+    if not titulo:
+        erros.append("Informe o título.")
+    elif len(titulo) > 100:
+        erros.append("O título deve ter no máximo 100 caracteres.")
+    
+    if not autor:
+        erros.append("Informe o autor.")
+    elif len(autor) > 100:
+        erros.append("O autor deve ter no máximo 100 caracteres.")
+    
+    if not (isbn.isascii() and isbn.isdigit() and len(isbn) == 13):
+        erros.append("O ISBN deve ter 13 números.")    
+    if not imagem:
+        erros.append("Informe a imagem.")
+    if genero is None:
+        erros.append("Selecione um gênero válido.")
+
+    dados = {
+        "titulo": titulo,
+        "autor": autor,
+        "isbn": isbn,
+        "imagem": imagem,
+        "genero": genero,
+    }
+    return erros, dados
+
+@app.route("/admin/livros/novo", methods=["GET", "POST"])
+@admin_required
+def livro_novo():
+    if request.method == "POST":
+        erros, dados = validar_livro(request.form)
+
+        if erros:
+            return render_template(
+                "admin_livro_novo.html",
+                generos=models.listar_generos(),
+                valores=request.form,
+                erros=erros,
+            )
+
+        models.criar_livro(
+            titulo=dados["titulo"],
+            autor=dados["autor"],
+            isbn=dados["isbn"],
+            imagem=dados["imagem"],
+            id_genero=dados["genero"].id,
+            id_administrador=current_user.id,
+        )
+        flash("Livro cadastrado com sucesso.", "sucesso")
+        return redirect(url_for("admin_painel"))
+
+    return render_template(
+        "admin_livro_novo.html",
+        generos=models.listar_generos(),
+        valores={},
+        erros=[],
+    )
+
+@app.route("/admin/livros/<int:livro_id>/editar", methods=["GET", "POST"])
+@admin_required
+
+def admin_livro_editar(livro_id):
+    livro = models.buscar_livro(livro_id)
+    if livro is None:
+        abort(404)
+
+    if request.method == "POST":
+        erros, dados = validar_livro(request.form, livro_id)
+
+        if erros:
+            return render_template(
+                "admin_editar.html",
+                livro=livro,
+                generos=models.listar_generos(),
+                valores=request.form,
+                erros=erros,
+            )
+
+        models.atualizar_livro(
+            livro_id,
+            titulo=dados["titulo"],
+            autor=dados["autor"],
+            isbn=dados["isbn"],
+            imagem=dados["imagem"],
+            id_genero=dados["genero"].id,
+        )
+        flash("Livro atualizado com sucesso.", "sucesso") 
+        return redirect(url_for("admin_painel"))
+
+    return render_template(
+        "admin_livro_editar.html",
+        livro=livro,
+        generos=models.listar_generos(),
+        valores={},
+        erros=[],
+    )
+
 # Continuem com as outras funções abaixo
 
 if __name__ == "__main__":

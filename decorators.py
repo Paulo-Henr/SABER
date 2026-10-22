@@ -5,7 +5,6 @@ from flask_login import current_user
  
 from extensions import login_manager
  
- 
 def admin_required(view_func):
     @wraps(view_func)
     def rota_protegida(*args, **kwargs):
